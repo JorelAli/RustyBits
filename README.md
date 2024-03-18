@@ -8,8 +8,8 @@ A collection of small Rust-based projects
   - [ ] Splitting, field extraction, slicing
   - [ ] Regex matching
 - [ ] Making a web request
-- [ ] Dates
-- [ ] Recreation of the "Days until Christmas" desktop application with GUI
+- [x] Dates
+- [x] Recreation of the "Days until Christmas" desktop application with GUI
 
 ## Aims
 
