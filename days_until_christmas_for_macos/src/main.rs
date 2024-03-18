@@ -3,82 +3,57 @@ use std::{thread, time};
 
 use cacao::appkit::{App, AppDelegate};
 use cacao::appkit::window::Window;
+use cacao::geometry::Rect;
+use cacao::layout::Layout;
+use cacao::notification_center::Dispatcher;
+use cacao::text::{Font, Label};
 
 #[derive(Default)]
 struct ChristmasApplication {
-    window: Window
+    window: Window,
+	label: Label
 }
 
 impl AppDelegate for ChristmasApplication {
     fn did_finish_launching(&self) {
 		App::activate();
-       self.window.set_minimum_content_size(400., 400.);
-       self.window.set_title("Christmas");
-       self.window.show();
+
+		let width = 215.;
+		let height = 270.;
+		self.window.set_minimum_content_size(width, height);
+		self.window.set_content_size(width, height);
+		self.window.set_title("Christmas");
+		self.window.set_content_view(&self.label);
+		self.window.show();
+
+		self.label.set_translates_autoresizing_mask_into_constraints(true);
+		self.label.set_frame(Rect::new(-35., 10., width, height));
+		self.label.set_font(Font::system(38.));
+
+		thread::spawn(move || {
+			loop {
+				App::<ChristmasApplication, String>::dispatch_main(generate_time_until_christmas());
+				thread::sleep(time::Duration::from_millis(500))
+			}
+		});
     }
+
+    fn should_terminate_after_last_window_closed(&self) -> bool {
+        true
+    }
+}
+
+impl Dispatcher for ChristmasApplication {
+	type Message = String;
+
+	fn on_ui_message(&self, _message: Self::Message) {
+		self.label.set_text(_message);
+	}
 }
 
 fn main() {
     App::new("com.hello.world", ChristmasApplication::default()).run();
 }
-
-// // Function to build a font with specific attributes
-// fn build_font() -> nwg::Font {
-// 	let mut font = nwg::Font::default();
-// 
-// 	// Configure the font using Font builder
-// 	let _ = nwg::Font::builder()
-// 		.size(38)
-// 		.family("Arial")
-// 		.build(&mut font);
-// 
-// 	font
-// }
-// 
-// // Struct representing the Christmas application UI
-// #[derive(Default, NwgUi)]
-// pub struct ChristmasApplication {
-// 	// Main window of the application
-// 	#[nwg_control(size: (212, 217), title: "Christmas", flags: "WINDOW|VISIBLE")]
-// 	#[nwg_events( OnInit: [ChristmasApplication::init] )]
-// 	window: nwg::Window,
-// 
-// 	// Label to display countdown until Christmas
-// 	#[nwg_control(text: "Loading...", size: (212, 217), position: (10, 10), font: Some(&build_font()) )]
-// 	label: nwg::Label,
-// 
-// 	// Timer to trigger updates to the countdown label
-// 	#[nwg_control]
-// 	#[nwg_events( OnNotice: [ChristmasApplication::update_countdown] )]
-// 	timer_notice: nwg::Notice,
-// }
-// 
-// impl ChristmasApplication {
-// 	// Function to start the timer for updating the countdown
-// 	fn start_timer(sender: nwg::NoticeSender) -> thread::JoinHandle<String> {
-// 		thread::spawn(move || {
-// 			loop {
-// 				// Sleep for 500 milliseconds
-// 				thread::sleep(time::Duration::from_millis(500));
-// 				// Send notice to update the countdown label
-// 				sender.notice();
-// 			}
-// 		})
-// 	}
-// 
-// 	// Initialization function for the UI
-// 	fn init(&self) {
-// 		// Start the timer to update the countdown label
-// 		ChristmasApplication::start_timer(self.timer_notice.sender());
-// 	}
-// 
-// 	// Function to update the countdown label
-// 	fn update_countdown(&self) {
-// 		// Set the text of the label to the time remaining until Christmas
-// 		self.label.set_text(generate_time_until_christmas().as_str());
-// 	}
-// }
-
 
 // Function to generate a string representing the time remaining until Christmas
 fn generate_time_until_christmas() -> std::string::String {
