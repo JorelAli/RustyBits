@@ -27,4 +27,4 @@ jobs:
       with:
           name: Days until Christmas (MacOS)
           path: |
-          target/debug/*
+            target/debug/*
