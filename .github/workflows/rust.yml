@@ -27,4 +27,4 @@ jobs:
       with:
         name: Days until Christmas (MacOS)
         path: |
-          days_until_christmas_for_macos/target/debug/*
+          days_until_christmas_for_macos/target/debug/days_until_christmas
