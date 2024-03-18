@@ -11,6 +11,7 @@ struct ChristmasApplication {
 
 impl AppDelegate for ChristmasApplication {
     fn did_finish_launching(&self) {
+		App::activate();
        self.window.set_minimum_content_size(400., 400.);
        self.window.set_title("Christmas");
        self.window.show();

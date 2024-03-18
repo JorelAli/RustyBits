@@ -16,15 +16,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: MacOS
-      run: cd days_until_christmas_for_macos
     - name: Build
+      working-directory: ./days_until_christmas_for_macos
       run: cargo build --verbose
     - name: Run tests
+      working-directory: ./days_until_christmas_for_macos
       run: cargo test --verbose
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
-          name: Days until Christmas (MacOS)
-          path: |
-            target/debug/*
+        name: Days until Christmas (MacOS)
+        path: |
+          days_until_christmas_for_macos/target/debug/*
